@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, TextInput, Linking, Platform } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { ScrollView } from 'react-native'
 import { useNavigation } from '@react-navigation/native';
 import { useSelector } from 'react-redux';
+// import DeviceInfo from 'react-native-device-info';
+import * as Device from 'expo-device';
 
 
 const SOSButton = () => (
@@ -65,12 +67,11 @@ const handleExtraPress = () => {
 
 
 
-
 const HomaPage = () => {
   const [search, setSearch] = useState('');
   const userInfo = useSelector((state) => state.user);
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
-  
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
   const navigation = useNavigation();
   const userContacts = userInfo.contacts;
   const ExtraButton = ({ iconName, onPress, display }) => (
@@ -79,14 +80,29 @@ const HomaPage = () => {
       <Text>{iconName}</Text>
     </TouchableOpacity>
   );
+ 
+  const [isPhoneLocked, setIsPhoneLocked] = useState(true);
   
+  useEffect(() => {
+    const checkLockScreen = async () => {
+      try {
+        const lockScreenType = await Device.getLockScreenType();
+        setIsPhoneLocked(lockScreenType !== 'None');
+      } catch (error) {
+        console.log('Error checking lock screen type:', error);
+      }
+    }
+  
+    checkLockScreen();
+  }, []);
+
   const ICONS = [
     // { name: 'Medical Info', onPress: () => { handlePlacePress(); } },
-    { name: 'person', onPress: () => { handlePersonPress(); },display:'User Info' },
+    { name: 'person', onPress: () => { handlePersonPress(); }, display: 'User Info' },
     // { name: 'nature', onPress: () => { handleNaturePress(); } },
-    { name: 'local-hospital', onPress: () => { handleHospitalPress(); },display:'Nearby-Hospital' },
+    { name: 'local-hospital', onPress: () => { handleHospitalPress(); }, display: 'Nearby-Hospital' },
   ];
-  
+
   const createExtraButtons = (icons) => icons.map((icon, index) => (
     <ExtraButton
       key={index}
@@ -94,7 +110,7 @@ const HomaPage = () => {
       onPress={icon.onPress}
     />
   ));
-  
+
   const ButtonGrid = ({ onPress }) => (
     <View style={styles.buttonGrid}>
       {createExtraButtons(ICONS)}
@@ -123,7 +139,7 @@ const HomaPage = () => {
         </View>
         <TouchableOpacity onPress={() => handleEditInfo()}>
           {/* <Text style={styles.userInfoText}>User Info</Text> */}
-          {isLoggedIn && <MaterialIcons name="edit" size={24} color="white" />}
+          {isPhoneLocked && <MaterialIcons name="edit" size={24} color="white" />}
         </TouchableOpacity>
       </View>
       <View style={styles.container}>

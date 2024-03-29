@@ -50,7 +50,7 @@ const FormField = ({
     );
 };
 
-const MedicalForm = () => {
+const EditInfo = () => {
     const userData = useSelector(state => state.user);
     const [name, setName] = useState(userData.name || '');
     const [bloodGroup, setBloodGroup] = useState(userData.bloodGroup || '');
@@ -295,4 +295,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default MedicalForm;
+export default EditInfo;

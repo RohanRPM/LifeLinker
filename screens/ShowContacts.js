@@ -41,8 +41,13 @@ export default function AddContacts() {
 
     const handleContactPress = (contact) => {
         const { name, phoneNumbers } = contact;
-        setSelectedContacts([...selectedContacts, { name, phoneNumber: phoneNumbers[0]?.number }]);
-    }
+        const phoneNumber = phoneNumbers[0]?.number;
+      
+        // Check if the contact already exists in the array
+        if (!selectedContacts.some(c => c.name === name && c.phoneNumber === phoneNumber)) {
+          setSelectedContacts([...selectedContacts, { name, phoneNumber }]);
+        }
+      }
 
     const handleSearchChange = (text) => {
         setSearchTerm(text);

@@ -12,6 +12,8 @@ import MedicalInfo from './screens/MedicalInfo';
 import MedicalForm from './screens/MedicalForm';
 import HomaPage from './screens/HomaPage';
 import UserInfo from './screens/UserInfo';
+import EditInfo from './screens/EditInfo';
+import EditContacts from './screens/EditContacts';
 import ShowContacts from './screens/ShowContacts';
 import { PaperProvider } from 'react-native-paper';
 import { Provider } from 'react-redux';
@@ -35,6 +37,8 @@ function App() {
             <Stack.Screen name="MedicalInfo" component={MedicalInfo} />
             <Stack.Screen name="UserInfo" component={UserInfo} />
             <Stack.Screen name="ShowContacts" component={ShowContacts} />
+            <Stack.Screen name="EditInfo" component={EditInfo} />
+            <Stack.Screen name="EditContacts" component={EditContacts} />
           </Stack.Navigator>
         </NavigationContainer>
       </Provider>

@@ -11,7 +11,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 
 
 
-const AddContact = () => {
+const EditContacts = () => {
     const [name, setName] = useState('');
     const [phoneNumber, setPhoneNumber] = useState('');
     const dispatch = useDispatch();
@@ -162,7 +162,7 @@ const styles = StyleSheet.create({
     }
 });
 
-export default AddContact;
+export default EditContacts;
 
 
 // import React, { useState, useEffect } from 'react';
