@@ -1,0 +1,9 @@
+{
+  "expo": {
+    "name": "HelpHub",
+    "slug": "HelpHub",
+    "android": {
+      "package": "com.anonymous.HelpHub"
+    }
+  }
+}
