@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "HelpHub",
-    "slug": "HelpHub",
+    "name": "LifeLinker",
+    "slug": "LifeLinker",
     "android": {
       "package": "com.anonymous.HelpHub"
     }

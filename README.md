@@ -18,3 +18,6 @@
 ## 📝 Notes
 
 - [`react-native-reanimated` docs](https://docs.swmansion.com/react-native-reanimated/)
+
+
+For Ubuntu implementation you might face issues of node version not supported (READ FIRST LINE BRO!) and also use 'nvm use 20' and 'nvm install 20' to use node 20 version.

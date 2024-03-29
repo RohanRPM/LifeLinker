@@ -1,4 +1,4 @@
-package com.anonymous.HelpHub
+package com.anonymous.LifeLinker
 
 import android.os.Build
 import android.os.Bundle
