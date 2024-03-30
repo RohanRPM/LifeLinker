@@ -11,6 +11,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 
 
 
+
 const AddContact = () => {
   const [name, setName] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
@@ -21,8 +22,21 @@ const AddContact = () => {
 
   // const [Contacts,setMobileContacts] = useState([]);
   // const [hasPermission, setHasPermission] = useState(null);
+  // const uploadDataAndNavigateAhead = () => {
+  //   navigation.push('HomePage')
+  // }
 
   const handleAddContact = () => {
+
+    if(name == "" || phoneNumber == ""){
+      alert("Fields cannot be empty!");
+      return;
+    }
+    if(phoneNumber && phoneNumber.length != 10){
+      alert("Enter a valid Mobile Number.")
+      return;
+    }
+
     const existingContactIndex = contacts.findIndex(
       (contact) => contact.phoneNumber === phoneNumber && contact.name === name
     );
@@ -58,35 +72,6 @@ const AddContact = () => {
       <TouchableOpacity
         onPress={(e) => {
           e.preventDefault();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
           handleDeleteContact(phoneNumber);
         }}
       >
@@ -108,6 +93,7 @@ const AddContact = () => {
         label="Phone Number"
         value={phoneNumber}
         onChangeText={setPhoneNumber}
+        keyboardType="numeric"
         style={styles.input}
       />
       <Button mode="contained" onPress={handleAddContact} style={{ backgroundColor: '#FF5659', marginTop: 20 }}>
@@ -129,7 +115,7 @@ const AddContact = () => {
         </View>
       </ScrollView>
       <View style={{}}>
-        <Button mode="contained" style={styles.submitButton} onPress={() => navigation.push('HomePage')}>
+        <Button mode="contained" style={styles.submitButton} onPress={() => navigation.push("HomePage")}>
           Submit
         </Button>
       </View>

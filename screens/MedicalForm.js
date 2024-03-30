@@ -67,21 +67,29 @@ const MedicalForm = () => {
 
 
     const handleSubmit = () => {
-        const userInfo = {
-            name,
-            bloodGroup,
-            age,
-            ongoingMedications,
-            medicalHistory,
-            allergies,
-            height,
-            weight,
-            isOrganDonor,
-            familyDoctorPhoneNo,
+        if(name == "")
+            alert("User Name cannot be empty!");
+        else if(bloodGroup == "NULL")
+            alert("Blood Group not selected!");
+        else if(age == "")
+            alert("Enter your age");
+        else{
+            const userInfo = {
+                name,
+                bloodGroup,
+                age,
+                ongoingMedications,
+                medicalHistory,
+                allergies,
+                height,
+                weight,
+                isOrganDonor,
+                familyDoctorPhoneNo,
+            }
+            console.log(userInfo);
+            dispatch(setUserInfo(userInfo));
+            navigation.push('AddContacts')
         }
-    
-        dispatch(setUserInfo(userInfo));
-        navigation.push('AddContacts')
     }
 
     return (
@@ -102,6 +110,7 @@ const MedicalForm = () => {
                                 style={{ backgroundColor: '#D9D9D9', borderWidth: 1, borderColor: '#ccc', borderRadius: 4, elevation: 5 }}
                                 onValueChange={(itemValue, itemIndex) => setBloodGroup(itemValue)}
                             >
+                                <Picker.Item label="--" value="NULL" />
                                 <Picker.Item label="A+" value="A+" />
                                 <Picker.Item label="A-" value="A-" />
                                 <Picker.Item label="B+" value="B+" />

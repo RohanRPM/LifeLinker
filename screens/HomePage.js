@@ -128,6 +128,7 @@ const HomePage = () => {
     const sendMessage = async (messageWithLocation, phoneNumber)  =>  {
       // const phoneNumber = contact;
       // const messageWithLocation = `${message} Lat: ${currentPosition.latitude}, Long: ${currentPosition.longitude}`;
+      console.log(messageWithLocation + " " + phoneNumber);
       alert(messageWithLocation + " " + phoneNumber);
       
 
@@ -179,7 +180,7 @@ const HomePage = () => {
       ));
     }
 
-    locationString = "" + location[0] + ", " + location[1];
+    locationString = "" + location[1] + "," + location[0];
     let mapLink = `http://maps.google.com/maps?daddr=${locationString}`
 
     for (const contact of contactNumbers) {
