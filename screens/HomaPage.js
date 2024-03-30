@@ -49,9 +49,6 @@ const handleNaturePress = () => {
   console.log('Nature pressed');
 };
 
-const handleHospitalPress = () => {
-  console.log('Hospital pressed');
-};
 
 const handleContactPress = (index) => {
   console.log(`Contact ${index} pressed`);
@@ -71,7 +68,7 @@ const HomaPage = () => {
   const [search, setSearch] = useState('');
   const userInfo = useSelector((state) => state.user);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-
+  
   const navigation = useNavigation();
   const userContacts = userInfo.contacts;
   const ExtraButton = ({ iconName, onPress, display }) => (
@@ -80,37 +77,37 @@ const HomaPage = () => {
       <Text>{iconName}</Text>
     </TouchableOpacity>
   );
- 
+  
   const [isPhoneLocked, setIsPhoneLocked] = useState(true);
   
   // useEffect(() => {
-  //   const checkLockScreen = async () => {
-  //     try {
-  //       const lockScreenType = await Device.getLockScreenType();
-  //       setIsPhoneLocked(lockScreenType !== 'None');
-  //     } catch (error) {
-  //       console.log('Error checking lock screen type:', error);
-  //     }
-  //   }
-  
-  //   checkLockScreen();
-  // }, []);
-
-  const ICONS = [
-    // { name: 'Medical Info', onPress: () => { handlePlacePress(); } },
-    { name: 'person', onPress: () => { handlePersonPress(); }, display: 'User Info' },
-    // { name: 'nature', onPress: () => { handleNaturePress(); } },
-    { name: 'local-hospital', onPress: () => { handleHospitalPress(); }, display: 'Nearby-Hospital' },
-  ];
-
-  const createExtraButtons = (icons) => icons.map((icon, index) => (
-    <ExtraButton
+    //   const checkLockScreen = async () => {
+      //     try {
+        //       const lockScreenType = await Device.getLockScreenType();
+        //       setIsPhoneLocked(lockScreenType !== 'None');
+        //     } catch (error) {
+          //       console.log('Error checking lock screen type:', error);
+          //     }
+          //   }
+          
+          //   checkLockScreen();
+          // }, []);
+          
+          const ICONS = [
+            // { name: 'Medical Info', onPress: () => { handlePlacePress(); } },
+            { name: 'person', onPress: () => { handlePersonPress(); }, display: 'User Info' },
+            // { name: 'nature', onPress: () => { handleNaturePress(); } },
+            { name: 'local-hospital', onPress: () => { handleHospitalPress(); }, display: 'Nearby-Hospital' },
+          ];
+          
+          const createExtraButtons = (icons) => icons.map((icon, index) => (
+            <ExtraButton
       key={index}
       iconName={icon.name}
       onPress={icon.onPress}
     />
   ));
-
+  
   const ButtonGrid = ({ onPress }) => (
     <View style={styles.buttonGrid}>
       {createExtraButtons(ICONS)}
@@ -119,7 +116,10 @@ const HomaPage = () => {
   const handlePersonPress = () => {
     navigation.push('UserInfo');
   }
-
+  const handleHospitalPress = () => {
+    navigation.push('Hospital');
+  };
+  
   const filteredContacts = Array.isArray(userContacts)
     ? userContacts.filter(contact =>
       typeof contact.name === 'string' && contact.name.toLowerCase().includes(search.toLowerCase()))

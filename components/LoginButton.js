@@ -1,12 +1,13 @@
 import React from "react";
 import { TouchableOpacity, Text, StyleSheet } from "react-native";
 import colors from "../constants/color";
-
+import { useNavigation } from "@react-navigation/native";
 const CustomButton = ({ onPress, title, buttonStyle, textStyle }) => {
+  const navigation = useNavigation();
   return (
     <TouchableOpacity
       style={[styles.button, buttonStyle]}
-      onPress={() => navigation.push('HomaPage')}
+      onPress={() => navigation.push('MedicalForm')}
     >
       <Text style={[styles.text, textStyle]}>Login</Text>
     </TouchableOpacity>

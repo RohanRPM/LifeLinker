@@ -15,6 +15,7 @@ import UserInfo from './screens/UserInfo';
 import EditInfo from './screens/EditInfo';
 import EditContacts from './screens/EditContacts';
 import ShowContacts from './screens/ShowContacts';
+import Hospital from './screens/Hospital';
 import { PaperProvider } from 'react-native-paper';
 import { Provider } from 'react-redux';
 import store from './redux/store';
@@ -39,6 +40,7 @@ function App() {
             <Stack.Screen name="ShowContacts" component={ShowContacts} />
             <Stack.Screen name="EditInfo" component={EditInfo} />
             <Stack.Screen name="EditContacts" component={EditContacts} />
+            <Stack.Screen name="Hospital" component={Hospital} />
           </Stack.Navigator>
         </NavigationContainer>
       </Provider>

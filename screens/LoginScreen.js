@@ -6,13 +6,43 @@ import {
   Image,
   TouchableOpacity,
   TextInput,
+  Alert
 } from "react-native";
-import { SafeAreaView } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import colors from "../constants/color";
 import SignupButton from "../components/LoginButton";
+import axios from 'axios';
+import {useNavigation} from '@react-navigation/native'
+import {Button} from 'react-native-paper'
 
 const LoginScreen = () => {
-  const [userPhoneNo, setuserPhoneNo] = useState("");
+  const [userPhoneNo, setUserPhoneNo] = useState("");
+  const [otp, setOtp] = useState("");
+  const navigation = useNavigation();
+
+  const sendOTP = async () => {
+    try {
+      const response = await axios.post('https://his-backend-j0rg.onrender.com/api/send-otp', { PhoneNumber: "+91" + userPhoneNo });
+      console.log(response.data);
+      Alert.alert('OTP Sent', 'An OTP has been sent to your phone number.');
+    } catch (error) {
+      console.error('Error sending OTP:', error);
+      Alert.alert('Error', 'Failed to send OTP. Please try again.');
+    }
+  };
+
+  const verifyOTP = async () => {
+    try {
+      const response = await axios.post('https://his-backend-j0rg.onrender.com/api/verify-otp', { PhoneNumber: "+91" + userPhoneNo, OTP: otp });
+      console.log(response.data);
+      Alert.alert('Login Successful', 'You have successfully logged in.');
+      // navigation.push('MedicalForm');
+    } catch (error) {
+      console.error('Error verifying OTP:', error);
+      Alert.alert('Error', 'Failed to verify OTP. Please check your OTP and try again.');
+    }
+  };
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.white }}>
       <View style={{ flex: 1 }}>
@@ -28,33 +58,39 @@ const LoginScreen = () => {
             <Text style={styles.Text}>Login</Text>
           </View>
           <View>
-            <Text style={styles.Lable}>phone no.</Text>
+            <Text style={styles.Label}>Phone No.</Text>
             <View style={styles.TextField}>
+              <Text style={styles.prefix}>+91</Text>
               <TextInput
                 placeholder="Mobile Number"
                 placeholderTextColor={"gray"}
-                keyboardType="number-pad"
+                keyboardType="phone-pad"
+                value={userPhoneNo}
+                onChangeText={(value) => setUserPhoneNo(value)}
+                style={styles.phoneInput}
               />
             </View>
           </View>
           <TouchableOpacity
-            style={styles.sendotplink}
-            // onPress={() => navigation.push("Send otp")}
+            style={styles.sendotpLink}
+            onPress={sendOTP}
           >
-            <Text style={styles.sendotplink}>send otp</Text>
+            <Text style={styles.sendotpLinkText}>Send OTP</Text>
           </TouchableOpacity>
           <View>
-            <Text style={styles.Lable}>otp</Text>
+            <Text style={styles.Label}>OTP</Text>
             <View style={styles.TextField}>
               <TextInput
                 placeholder="OTP"
                 placeholderTextColor={"gray"}
                 keyboardType="number-pad"
+                value={otp}
+                onChangeText={setOtp}
               />
             </View>
           </View>
           <View style={styles.SubmitButton}>
-            <SignupButton >Login</SignupButton>
+            <SignupButton onPress={verifyOTP}>Login</SignupButton>
           </View>
         </View>
       </View>
@@ -63,23 +99,14 @@ const LoginScreen = () => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20,
-  },
-  imageContainer: {
-    flex: 1,
-    alignItems: "center",
-  },
   image: {
     width: 120,
     height: 120,
     resizeMode: "contain",
   },
-  appname:{
+  appname: {
     fontSize: 24,
-    fontWeight:'400',
-
+    fontWeight: '400',
   },
   LoginContainer: {
     height: 427,
@@ -92,11 +119,10 @@ const styles = StyleSheet.create({
   Text: {
     padding: 10,
     fontSize: 32,
-    
     fontFamily: "sans-serif",
     color: colors.tertiary,
   },
-  Lable: {
+  Label: {
     color: colors.textcolor,
     fontSize: 16,
     fontFamily: "sans-serif",
@@ -109,10 +135,19 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 10,
     flexDirection: "row",
-    justifyContent: "space-between",
+    alignItems: "center",
     marginHorizontal: 20,
   },
-  sendotplink: {
+  prefix: {
+    fontSize: 16,
+    color: colors.textcolor,
+    paddingHorizontal: 10,
+  },
+  phoneInput: {
+    flex: 1,
+    height: "100%",
+  },
+  sendotpLinkText: {
     color: colors.blue,
     fontSize: 16,
     fontFamily: "sans-serif",
