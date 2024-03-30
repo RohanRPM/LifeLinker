@@ -27,7 +27,7 @@ function App() {
     <PaperProvider>
       <Provider store={store}>
         <NavigationContainer>
-          <Stack.Navigator initialRouteName="MedicalForm" screenOptions={{ headerShown: false }}>
+          <Stack.Navigator initialRouteName="Login" screenOptions={{ headerShown: false }}>
             <Stack.Screen name="HomaPage" component={HomaPage} />
             <Stack.Screen name="MedicalForm" component={MedicalForm} />
             <Stack.Screen name="Login" component={LoginScreen} />

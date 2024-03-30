@@ -83,18 +83,18 @@ const HomaPage = () => {
  
   const [isPhoneLocked, setIsPhoneLocked] = useState(true);
   
-  useEffect(() => {
-    const checkLockScreen = async () => {
-      try {
-        const lockScreenType = await Device.getLockScreenType();
-        setIsPhoneLocked(lockScreenType !== 'None');
-      } catch (error) {
-        console.log('Error checking lock screen type:', error);
-      }
-    }
+  // useEffect(() => {
+  //   const checkLockScreen = async () => {
+  //     try {
+  //       const lockScreenType = await Device.getLockScreenType();
+  //       setIsPhoneLocked(lockScreenType !== 'None');
+  //     } catch (error) {
+  //       console.log('Error checking lock screen type:', error);
+  //     }
+  //   }
   
-    checkLockScreen();
-  }, []);
+  //   checkLockScreen();
+  // }, []);
 
   const ICONS = [
     // { name: 'Medical Info', onPress: () => { handlePlacePress(); } },
