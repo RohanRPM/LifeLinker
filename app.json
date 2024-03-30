@@ -3,7 +3,7 @@
     "name": "LifeLinker",
     "slug": "LifeLinker",
     "android": {
-      "package": "com.anonymous.HelpHub"
+      "package": "com.anonymous.LifeLinker"
     }
   }
 }

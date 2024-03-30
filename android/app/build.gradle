@@ -83,9 +83,9 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace 'com.anonymous.HelpHub'
+    namespace 'com.anonymous.LifeLinker'
     defaultConfig {
-        applicationId 'com.anonymous.HelpHub'
+        applicationId 'com.anonymous.LifeLinker'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

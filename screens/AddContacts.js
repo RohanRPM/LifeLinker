@@ -129,7 +129,7 @@ const AddContact = () => {
         </View>
       </ScrollView>
       <View style={{}}>
-        <Button mode="contained" style={styles.submitButton} onPress={() => navigation.push('HomaPage')}>
+        <Button mode="contained" style={styles.submitButton} onPress={() => navigation.push('HomePage')}>
           Submit
         </Button>
       </View>

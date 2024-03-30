@@ -40,6 +40,18 @@ export default function AddContacts() {
     }, []);
 
     const handleContactPress = (contact) => {
+        if(contact){
+            alert("Contact object exists");
+        }else
+        throw Error;
+        if(contact.name){
+            alert("Contact's name exists");
+        }else
+        throw Error;
+        if(contact.phoneNumbers[0]){
+            alert("Contacts Phone number exist");
+        }else
+            throw Error;
         const { name, phoneNumbers } = contact;
         const phoneNumber = phoneNumbers[0]?.number;
       
@@ -86,7 +98,7 @@ export default function AddContacts() {
                             ) && [styles.selectedContact, styles.selectedContactBorder],
                         ]}
                         key={index}
-                        onPress={() => handleContactPress(contact)}
+                        onPress={(contact) => handleContactPress(contact)}
                     >
                         <View style={{flexDirection:'row', alignItems:'center', gap:5}}>
                             <MaterialIcons name="person" size={24} color="#FF5659"  style = {[{marginLeft:10}, selectedContacts.some((c) => c.phoneNumber === contact.phoneNumbers[0]?.number) && styles.selectedContactText]} />

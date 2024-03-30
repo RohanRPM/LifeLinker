@@ -9,9 +9,9 @@ import { fetchData } from './Hospital';
 // import * as Device from 'expo-device';
 import { requestForegroundPermissionsAsync, getCurrentPositionAsync, startLocationUpdatesAsync } from 'expo-location';
 import SMS from 'react-native-sms';
+import SendSMS from 'react-native-sms'
 
-
-
+let contactNumbers = []
 
 const dialCall = (number) => {
   let phoneNumber = '';
@@ -25,6 +25,8 @@ const dialCall = (number) => {
 
   Linking.openURL(phoneNumber);
 };
+
+
 
 const Contact = ({ name, phoneNumber }) => (
   <TouchableOpacity style={styles.contactContainer} onPress={handleContactPress}>
@@ -44,7 +46,7 @@ const handleAddPress = () => {
   console.log('Add pressed');
 };
 
-const handleNaturePress = () => {
+const handleNaturePress = () => { 
   console.log('Nature pressed');
 };
 
@@ -60,14 +62,14 @@ const handleExtraPress = () => {
 
 
 
-const HomaPage = () => {
+const HomePage = () => {
 
   const [search, setSearch] = useState('');
   const userInfo = useSelector((state) => state.user);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [currentPosition, setCurrentPosition] = useState({ latitude: null, longitude: null });
   const [isPermissionGranted, setIsPermissionGranted] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  // const [isLoading, setIsLoading] = useState(false);
   
   useEffect(() => {
     const requestGeolocationPermission = async () => {
@@ -106,13 +108,15 @@ const HomaPage = () => {
   const userContacts = userInfo.contacts;
 
   const getCurrentLocation = async () => {
-    setIsLoading(true);
+    // setIsLoading(true);
     try {
       const { coords } = await getCurrentPositionAsync({ enableHighAccuracy: true }); // Enable high accuracy mode
       setCurrentPosition({ latitude: coords.latitude, longitude: coords.longitude });
+      // alert("Inside the part where we fetch coords" + coords.latitude + coords.longitude);
+      return [coords.longitude, coords.latitude];
     } catch (error) {
       console.error('Error getting current location:', error);
-      setIsLoading(false);
+      // setIsLoading(false);
       Alert.alert(
         'Error',
         'Failed to get current location. Please make sure location services are enabled and try again.'
@@ -121,29 +125,66 @@ const HomaPage = () => {
     };
     
     
-    const sendMessage = (message, contact) => {
-      const phoneNumber = contact.phoneNumber;
-      const messageWithLocation = `${message} Lat: ${currentPosition.latitude}, Long: ${currentPosition.longitude}`;
-      SMS.send({
-        phoneNumber: phoneNumber,
-        message: messageWithLocation,
-        successTypes: ['sent', 'queued'],
-        allowAndroidSendWithoutReadPermission: true,
-        onSend: (status) => {
-          console.log(`Message sent to ${phoneNumber}:`, status);
+    const sendMessage = async (messageWithLocation, phoneNumber)  =>  {
+      // const phoneNumber = contact;
+      // const messageWithLocation = `${message} Lat: ${currentPosition.latitude}, Long: ${currentPosition.longitude}`;
+      alert(messageWithLocation + " " + phoneNumber);
+      
+
+      SendSMS.send(
+        {
+          body: messageWithLocation,
+          recipients: [phoneNumber],
+          successTypes: ['sent', 'queued'],
+          allowAndroidSendWithoutReadPermission: true,
         },
-        onFail: (error) => {
-        console.error(`Error sending message to ${phoneNumber}:`, error);
-      },
-    });
-  };
+        (completed, cancelled, error) => {
+          if (completed) {
+            console.log('SMS Sent Completed');
+          } else if (cancelled) {
+            console.log('SMS Sent Cancelled');
+          } else if (error) {
+            console.log('Some error occured');
+          }
+        },
+      );
+    };
+
+    //   await SMS.send({
+    //     phoneNumber: phoneNumber,
+    //     message: messageWithLocation,
+    //     successTypes: ['sent', 'queued'],
+    //     allowAndroidSendWithoutReadPermission: true,
+    //     onSend: (status) => {
+    //       console.log(`Message sent to ${phoneNumber}:`, status);
+    //     },
+    //     onFail: (error) => {
+    //     console.error(`Error sending message to ${phoneNumber}:`, error);
+    //   },onPress: (status){
+    //     console.log('message sending initiated');
+    //   }
+    // });
+  // };
   
   async function sendEmergencyMessageWithLocation() {
     const location = await getCurrentLocation();
-    alert(location);
-    const contacts = userInfo.contact;
-    for (const contact of contacts) {
-      sendMessage(`I am in distress. My location is: ${location}`, contact);
+    // alert(location[0] + " " + location[1]);
+    // console.log("Contact detail : " + userInfo.contact);
+    
+    // const contacts = userInfo.contact;\
+    const contactNumbers = [];
+    {
+      filteredContacts.map((contact, index) =>(
+        contactNumbers.push({"name":contact.name, "number": contact.phoneNumber})
+      ));
+    }
+
+    locationString = "" + location[0] + ", " + location[1];
+    let mapLink = `http://maps.google.com/maps?daddr=${locationString}`
+
+    for (const contact of contactNumbers) {
+      alert("Contact detail : " + contact["number"]);
+      sendMessage(`I met an accident! Check this message immediately. My location is: ${mapLink}`, contact["number"]);
     }
   }
   function openHomePage() {
@@ -356,4 +397,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default HomaPage;
+export default HomePage;

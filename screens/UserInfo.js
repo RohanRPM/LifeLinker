@@ -11,7 +11,7 @@ const UserInfo = () => {
     return (
         <View style={styles.wrapper}>
             <View style={[styles.userBar, {paddingVertical:12}]}>
-                <TouchableOpacity style={{}} onPress={() => navigation.push('HomaPage')}>
+                <TouchableOpacity style={{}} onPress={() => navigation.push('HomePage')}>
                     <MaterialIcons name='home' size={24} color='white' />
                 </TouchableOpacity>
                 <View style={{ flexDirection: 'row', gap: 20, marginLeft: 10 }}>

@@ -10,7 +10,7 @@ import OtpVerification from './screens/OtpVerification';
 import AddContacts from './screens/AddContacts';
 import MedicalInfo from './screens/MedicalInfo';
 import MedicalForm from './screens/MedicalForm';
-import HomaPage from './screens/HomaPage';
+import HomePage from './screens/HomePage';
 import UserInfo from './screens/UserInfo';
 import EditInfo from './screens/EditInfo';
 import EditContacts from './screens/EditContacts';
@@ -29,7 +29,7 @@ function App() {
       <Provider store={store}>
         <NavigationContainer>
           <Stack.Navigator initialRouteName="Login" screenOptions={{ headerShown: false }}>
-            <Stack.Screen name="HomaPage" component={HomaPage} />
+            <Stack.Screen name="HomePage" component={HomePage} />
             <Stack.Screen name="MedicalForm" component={MedicalForm} />
             <Stack.Screen name="Login" component={LoginScreen} />
             <Stack.Screen name="SignUp" component={SignUpScreen} />

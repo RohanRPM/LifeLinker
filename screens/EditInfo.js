@@ -81,7 +81,7 @@ const EditInfo = () => {
         }
     
         dispatch(setUserInfo(userInfo));
-        navigation.push('HomaPage')
+        navigation.push('HomePage')
     }
 
     handleEditContacts = () => {

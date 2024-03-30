@@ -1,4 +1,4 @@
-rootProject.name = 'HelpHub'
+rootProject.name = 'LifeLinker'
 
 dependencyResolutionManagement {
   versionCatalogs {
