@@ -1,18 +1,17 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, TextInput, Linking, Platform } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { ScrollView } from 'react-native'
 import { useNavigation } from '@react-navigation/native';
 import { useSelector } from 'react-redux';
+import { fetchData } from './Hospital';
 // import DeviceInfo from 'react-native-device-info';
-import * as Device from 'expo-device';
+// import * as Device from 'expo-device';
+import { requestForegroundPermissionsAsync, getCurrentPositionAsync, startLocationUpdatesAsync } from 'expo-location';
+import SMS from 'react-native-sms';
 
 
-const SOSButton = () => (
-  <TouchableOpacity style={styles.sosButton} onPress={handleSOSPress}>
-    <Text style={styles.sosText}>SOS</Text>
-  </TouchableOpacity>
-);
+
 
 const dialCall = (number) => {
   let phoneNumber = '';
@@ -54,9 +53,6 @@ const handleContactPress = (index) => {
   console.log(`Contact ${index} pressed`);
 };
 
-const handleSOSPress = () => {
-  console.log('SOS pressed');
-};
 
 const handleExtraPress = () => {
   console.log('Extra pressed');
@@ -65,49 +61,145 @@ const handleExtraPress = () => {
 
 
 const HomaPage = () => {
+
   const [search, setSearch] = useState('');
   const userInfo = useSelector((state) => state.user);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [currentPosition, setCurrentPosition] = useState({ latitude: null, longitude: null });
+  const [isPermissionGranted, setIsPermissionGranted] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   
+  useEffect(() => {
+    const requestGeolocationPermission = async () => {
+      try {
+        const { status } = await requestForegroundPermissionsAsync();
+        if (status === 'granted') {
+          console.log('Location permission granted');
+          setIsPermissionGranted(true);
+        } else {
+          console.log('Location permission denied');
+          Alert.alert(
+            'Please Allow Location Permission First',
+            'Location Permission is needed for the application to function properly'
+          );
+        }
+      } catch (err) {
+        console.warn(err);
+      }
+    };
+    requestGeolocationPermission();
+  }, []);
+
+  useEffect(() => {
+    if (isPermissionGranted) {
+      getCurrentLocation();
+    }
+  }, [isPermissionGranted]);
+
+  useEffect(() => {
+    if (currentPosition.latitude) {
+      fetchData();
+    }
+  }, [currentPosition]);
+
   const navigation = useNavigation();
   const userContacts = userInfo.contacts;
+
+  const getCurrentLocation = async () => {
+    setIsLoading(true);
+    try {
+      const { coords } = await getCurrentPositionAsync({ enableHighAccuracy: true }); // Enable high accuracy mode
+      setCurrentPosition({ latitude: coords.latitude, longitude: coords.longitude });
+    } catch (error) {
+      console.error('Error getting current location:', error);
+      setIsLoading(false);
+      Alert.alert(
+        'Error',
+        'Failed to get current location. Please make sure location services are enabled and try again.'
+        );
+      }
+    };
+    
+    
+    const sendMessage = (message, contact) => {
+      const phoneNumber = contact.phoneNumber;
+      const messageWithLocation = `${message} Lat: ${currentPosition.latitude}, Long: ${currentPosition.longitude}`;
+      SMS.send({
+        phoneNumber: phoneNumber,
+        message: messageWithLocation,
+        successTypes: ['sent', 'queued'],
+        allowAndroidSendWithoutReadPermission: true,
+        onSend: (status) => {
+          console.log(`Message sent to ${phoneNumber}:`, status);
+        },
+        onFail: (error) => {
+        console.error(`Error sending message to ${phoneNumber}:`, error);
+      },
+    });
+  };
+  
+  async function sendEmergencyMessageWithLocation() {
+    const location = await getCurrentLocation();
+    alert(location);
+    const contacts = userInfo.contact;
+    for (const contact of contacts) {
+      sendMessage(`I am in distress. My location is: ${location}`, contact);
+    }
+  }
+  function openHomePage() {
+    navigation.push('HomePage');
+  }
+  const handleSOSPress = async () => {
+    console.log('SOS pressed');
+    try {
+      await sendEmergencyMessageWithLocation();
+      openHomePage();
+    } catch (error) {
+      console.error('Error sending emergency message:', error);
+    }
+  };
+  const SOSButton = () => (
+    <TouchableOpacity style={styles.sosButton} onPress={handleSOSPress}>
+      <Text style={styles.sosText}>SOS</Text>
+    </TouchableOpacity>
+  );
   const ExtraButton = ({ iconName, onPress, display }) => (
     <TouchableOpacity style={styles.extraButton} onPress={onPress}>
       {iconName && <MaterialIcons name={iconName} size={32} color="black" />}
       <Text>{iconName}</Text>
     </TouchableOpacity>
   );
-  
+
   const [isPhoneLocked, setIsPhoneLocked] = useState(true);
-  
+
   // useEffect(() => {
-    //   const checkLockScreen = async () => {
-      //     try {
-        //       const lockScreenType = await Device.getLockScreenType();
-        //       setIsPhoneLocked(lockScreenType !== 'None');
-        //     } catch (error) {
-          //       console.log('Error checking lock screen type:', error);
-          //     }
-          //   }
-          
-          //   checkLockScreen();
-          // }, []);
-          
-          const ICONS = [
-            // { name: 'Medical Info', onPress: () => { handlePlacePress(); } },
-            { name: 'person', onPress: () => { handlePersonPress(); }, display: 'User Info' },
-            // { name: 'nature', onPress: () => { handleNaturePress(); } },
-            { name: 'local-hospital', onPress: () => { handleHospitalPress(); }, display: 'Nearby-Hospital' },
-          ];
-          
-          const createExtraButtons = (icons) => icons.map((icon, index) => (
-            <ExtraButton
+  //   const checkLockScreen = async () => {
+  //     try {
+  //       const lockScreenType = await Device.getLockScreenType();
+  //       setIsPhoneLocked(lockScreenType !== 'None');
+  //     } catch (error) {
+  //       console.log('Error checking lock screen type:', error);
+  //     }
+  //   }
+
+  //   checkLockScreen();
+  // }, []);
+
+  const ICONS = [
+    // { name: 'Medical Info', onPress: () => { handlePlacePress(); } },
+    { name: 'person', onPress: () => { handlePersonPress(); }, display: 'User Info' },
+    // { name: 'nature', onPress: () => { handleNaturePress(); } },
+    { name: 'local-hospital', onPress: () => { handleHospitalPress(); }, display: 'Nearby-Hospital' },
+  ];
+
+  const createExtraButtons = (icons) => icons.map((icon, index) => (
+    <ExtraButton
       key={index}
       iconName={icon.name}
       onPress={icon.onPress}
     />
   ));
-  
+
   const ButtonGrid = ({ onPress }) => (
     <View style={styles.buttonGrid}>
       {createExtraButtons(ICONS)}
@@ -119,7 +211,7 @@ const HomaPage = () => {
   const handleHospitalPress = () => {
     navigation.push('Hospital');
   };
-  
+
   const filteredContacts = Array.isArray(userContacts)
     ? userContacts.filter(contact =>
       typeof contact.name === 'string' && contact.name.toLowerCase().includes(search.toLowerCase()))
